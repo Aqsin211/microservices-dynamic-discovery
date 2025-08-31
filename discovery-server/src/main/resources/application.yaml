@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: discovery-server
+
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    fetch-registry: false
+    register-with-eureka: false
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+
+server:
+  port: 8761

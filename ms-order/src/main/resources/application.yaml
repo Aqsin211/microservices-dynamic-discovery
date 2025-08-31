@@ -1,0 +1,28 @@
+spring:
+  application:
+    name: ms-order
+
+  datasource:
+    url: jdbc:postgresql://postgres-1:5432/test-database
+    username: postgres
+    password: Postgres1234567890
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://discovery-server:8761/eureka
+    register-with-eureka: true
+    fetch-registry: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+
+server:
+  port: 8081

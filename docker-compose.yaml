@@ -1,0 +1,70 @@
+services:
+  postgres:
+    image: postgres:latest
+    container_name: postgres-1
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Postgres1234567890
+      POSTGRES_DB: test-database
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  discovery-server:
+    build:
+      context: ./discovery-server
+    image: discovery-server
+    ports:
+      - "8761:8761"
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8761/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  ms-product:
+    build:
+      context: ./ms-product
+    image: ms-product
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+    depends_on:
+      discovery-server:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8080/actuator/health" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  ms-order:
+    build:
+      context: ./ms-order
+    image: ms-order
+    ports:
+      - "8081:8081"
+    restart: unless-stopped
+    depends_on:
+      discovery-server:
+        condition: service_healthy
+      ms-product:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+
+volumes:
+  postgres-data:
