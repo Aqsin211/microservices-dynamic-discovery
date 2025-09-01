@@ -90,7 +90,7 @@ cd microservices-dynamic-discovery
 
 ### 2. Build All Services
 
-Build each service using Maven (from their respective directories):
+Build each service using gradle (from their respective directories):
 
 ```bash
 cd eureka-server
@@ -143,7 +143,7 @@ Visit: [http://localhost:8761](http://localhost:8761)
 | POST   | /products          | Create a new product          |
 | PUT    | /products/{id}     | Update product                |
 | DELETE | /products/{id}     | Delete product                |
-| POST   | /products/order    | Create an order (buy product) |
+| POST   | /products/order    | Place an order for a product  |
 
 ### Order Service
 
